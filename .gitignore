@@ -1,0 +1,27 @@
+# Maven
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+
+# OryxOS 工作区（oryxos init 产物）
+.oryxos/
+
+# Website（VitePress）
+website/node_modules/
+website/.vitepress/dist/
+website/.vitepress/cache/
+
+# 打包产物（scripts/package.sh 输出）
+dist/
+
+# 日志与临时文件
+logs/
+*.log

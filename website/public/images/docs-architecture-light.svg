@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="680" viewBox="0 0 980 680" font-family="'PingFang SC','Microsoft YaHei','Noto Sans CJK SC',sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#888888"/>
+    </marker>
+  </defs>
+
+  <rect width="980" height="680" fill="#ffffff"/>
+  <text x="490" y="36" text-anchor="middle" font-size="21" font-weight="bold" fill="#1a1a1a">OryxOS 整体架构</text>
+
+  <!-- ============ 应用容器 ============ -->
+  <rect x="20" y="48" width="680" height="584" rx="12" fill="#ffffff" stroke="#c9c9c9" stroke-width="1.5"/>
+  <text x="40" y="74" font-size="13" font-weight="bold" fill="#666666">OryxOS 单体应用（单 JAR · JDK 21 + Spring Boot 3.x · virtual thread）</text>
+
+  <!-- 接入层 -->
+  <text x="40" y="102" font-size="12" font-weight="bold" fill="#4A86E8">① 接入层</text>
+  <rect x="40" y="110" width="200" height="56" rx="8" fill="#E7F0FE" stroke="#4A86E8" stroke-width="1.5"/>
+  <text x="140" y="134" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">CLI Channel</text>
+  <text x="140" y="154" text-anchor="middle" font-size="11" fill="#444444">oryxos chat · 人推</text>
+  <rect x="260" y="110" width="200" height="56" rx="8" fill="#E7F0FE" stroke="#4A86E8" stroke-width="1.5"/>
+  <text x="360" y="134" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">Web Service</text>
+  <text x="360" y="154" text-anchor="middle" font-size="11" fill="#444444">REST API · 人推</text>
+  <rect x="480" y="110" width="200" height="56" rx="8" fill="#E7F0FE" stroke="#4A86E8" stroke-width="1.5"/>
+  <text x="580" y="134" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">AgentScheduler</text>
+  <text x="580" y="154" text-anchor="middle" font-size="11" fill="#444444">cron 定时 · 钟推</text>
+
+  <line x1="140" y1="166" x2="140" y2="196" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="360" y1="166" x2="360" y2="196" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="580" y1="166" x2="580" y2="196" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- AgentService -->
+  <rect x="40" y="196" width="640" height="44" rx="8" fill="#FFF3D6" stroke="#D9A62E" stroke-width="1.5"/>
+  <text x="360" y="223" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">AgentService · process() —— 三触发源统一入口，同一调用链路</text>
+
+  <line x1="360" y1="240" x2="360" y2="272" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 引擎层 -->
+  <text x="40" y="264" font-size="12" font-weight="bold" fill="#8E63CE">② 引擎层</text>
+  <rect x="40" y="272" width="220" height="92" rx="8" fill="#F0E6FA" stroke="#8E63CE" stroke-width="1.5"/>
+  <text x="150" y="298" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">ReActLoop · 引擎</text>
+  <text x="150" y="322" text-anchor="middle" font-size="11" fill="#444444">Reason → Act → Observe</text>
+  <text x="150" y="342" text-anchor="middle" font-size="11" fill="#444444">MAX_ITERATIONS = 10</text>
+  <rect x="280" y="272" width="190" height="92" rx="8" fill="#F0E6FA" stroke="#8E63CE" stroke-width="1.5"/>
+  <text x="375" y="298" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">PromptBuilder</text>
+  <text x="375" y="322" text-anchor="middle" font-size="11" fill="#444444">system prompt + Memory</text>
+  <text x="375" y="342" text-anchor="middle" font-size="11" fill="#444444">+ 对话历史 + Tool 列表</text>
+  <rect x="490" y="272" width="190" height="92" rx="8" fill="#F0E6FA" stroke="#8E63CE" stroke-width="1.5"/>
+  <text x="585" y="298" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">ToolExecutor</text>
+  <text x="585" y="322" text-anchor="middle" font-size="11" fill="#444444">先 Sandbox 校验再执行</text>
+  <text x="585" y="342" text-anchor="middle" font-size="11" fill="#444444">写 tool_invocations</text>
+
+  <line x1="140" y1="364" x2="140" y2="396" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="365" y1="364" x2="365" y2="396" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="580" y1="364" x2="580" y2="396" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 能力层 -->
+  <text x="40" y="388" font-size="12" font-weight="bold" fill="#6AA84F">③ 能力层</text>
+  <rect x="40" y="396" width="200" height="104" rx="8" fill="#E4F2DC" stroke="#6AA84F" stroke-width="1.5"/>
+  <text x="140" y="422" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">Tool · 能力四</text>
+  <text x="140" y="444" text-anchor="middle" font-size="11" fill="#444444">ToolRegistry · 内置 9 Tool</text>
+  <text x="140" y="462" text-anchor="middle" font-size="11" fill="#444444">McpClientService</text>
+  <text x="140" y="480" text-anchor="middle" font-size="11" fill="#444444">WhitelistSandbox 白名单</text>
+  <rect x="260" y="396" width="200" height="104" rx="8" fill="#E4F2DC" stroke="#6AA84F" stroke-width="1.5"/>
+  <text x="360" y="422" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">Memory · 能力三</text>
+  <text x="360" y="444" text-anchor="middle" font-size="11" fill="#444444">MemoryService 三层门面</text>
+  <text x="360" y="462" text-anchor="middle" font-size="11" fill="#444444">会话 → SQLite</text>
+  <text x="360" y="480" text-anchor="middle" font-size="11" fill="#444444">长期 → MEMORY.md</text>
+  <rect x="480" y="396" width="200" height="104" rx="8" fill="#E4F2DC" stroke="#6AA84F" stroke-width="1.5"/>
+  <text x="580" y="422" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">Provider · 能力一</text>
+  <text x="580" y="444" text-anchor="middle" font-size="11" fill="#444444">ProviderService</text>
+  <text x="580" y="462" text-anchor="middle" font-size="11" fill="#444444">显式 name → ChatModel 映射</text>
+  <text x="580" y="480" text-anchor="middle" font-size="11" fill="#444444">Spring AI 只用一半</text>
+
+  <line x1="360" y1="500" x2="360" y2="532" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- 基础层 -->
+  <text x="40" y="524" font-size="12" font-weight="bold" fill="#777777">④ 基础层</text>
+  <rect x="40" y="532" width="115" height="80" rx="8" fill="#F2F2F2" stroke="#9E9E9E" stroke-width="1.5"/>
+  <text x="97" y="556" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">ContextLoader</text>
+  <text x="97" y="574" text-anchor="middle" font-size="10" fill="#444444">AGENT.md·Bootstrap</text>
+  <text x="97" y="592" text-anchor="middle" font-size="10" fill="#444444">Skill 元数据</text>
+  <rect x="175" y="532" width="115" height="80" rx="8" fill="#F2F2F2" stroke="#9E9E9E" stroke-width="1.5"/>
+  <text x="232" y="556" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">AgentLoader</text>
+  <text x="232" y="574" text-anchor="middle" font-size="10" fill="#444444">扫描 agents/ 目录</text>
+  <text x="232" y="592" text-anchor="middle" font-size="10" fill="#444444">deriveProfile</text>
+  <rect x="310" y="532" width="115" height="80" rx="8" fill="#F2F2F2" stroke="#9E9E9E" stroke-width="1.5"/>
+  <text x="367" y="556" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">SQLite 持久化</text>
+  <text x="367" y="574" text-anchor="middle" font-size="10" fill="#444444">sessions·审计·调度</text>
+  <text x="367" y="592" text-anchor="middle" font-size="10" fill="#444444">五张表</text>
+  <rect x="445" y="532" width="115" height="80" rx="8" fill="#F2F2F2" stroke="#9E9E9E" stroke-width="1.5"/>
+  <text x="502" y="556" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a1a1a">ConfigLoader</text>
+  <text x="502" y="574" text-anchor="middle" font-size="10" fill="#444444">密钥 ${ENV_VAR}</text>
+  <text x="502" y="592" text-anchor="middle" font-size="10" fill="#444444">环境变量注入</text>
+
+  <!-- ============ 外部依赖 ============ -->
+  <text x="720" y="248" font-size="13" font-weight="bold" fill="#B26A55">外部依赖（应用边界之外，不绑定任何一家）</text>
+  <rect x="720" y="264" width="240" height="344" rx="12" fill="#FFFCFA" stroke="#D98C7A" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <rect x="740" y="272" width="200" height="92" rx="8" fill="#ffffff" stroke="#D98C7A" stroke-width="1.5"/>
+  <text x="840" y="298" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">外部 MCP Server</text>
+  <text x="840" y="322" text-anchor="middle" font-size="11" fill="#444444">github-mcp 等社区 server</text>
+  <text x="840" y="342" text-anchor="middle" font-size="11" fill="#444444">JSON-RPC over stdio/SSE</text>
+
+  <rect x="740" y="396" width="200" height="104" rx="8" fill="#ffffff" stroke="#D98C7A" stroke-width="1.5"/>
+  <text x="840" y="422" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">LLM Provider API</text>
+  <text x="840" y="444" text-anchor="middle" font-size="11" fill="#444444">DeepSeek · Kimi · 通义…</text>
+  <text x="840" y="464" text-anchor="middle" font-size="11" fill="#444444">Ollama / vLLM 本地推理</text>
+
+  <rect x="740" y="508" width="200" height="88" rx="8" fill="#ffffff" stroke="#D98C7A" stroke-width="1.5"/>
+  <text x="840" y="534" text-anchor="middle" font-size="14" font-weight="bold" fill="#1a1a1a">企业 IM Webhook</text>
+  <text x="840" y="556" text-anchor="middle" font-size="11" fill="#444444">notify 出站推送</text>
+  <text x="840" y="574" text-anchor="middle" font-size="11" fill="#444444">飞书 / 企微 / 钉钉群机器人</text>
+
+  <!-- 跨界箭头 -->
+  <line x1="680" y1="318" x2="740" y2="318" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="680" y1="448" x2="740" y2="448" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path d="M40,448 L28,448 L28,645 L830,645 L830,596" fill="none" stroke="#888888" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="308" y="634" width="224" height="22" rx="4" fill="#ffffff"/>
+  <text x="420" y="650" text-anchor="middle" font-size="11" fill="#999999">notify 出站（过 Sandbox 域名白名单）</text>
+</svg>

@@ -1,0 +1,72 @@
+/* ============ OryxOS 品牌色：琥珀 × 深海军蓝 ============ */
+:root {
+  --vp-c-brand-1: #d97706;
+  --vp-c-brand-2: #f59e0b;
+  --vp-c-brand-3: #fbbf24;
+  --vp-c-brand-soft: rgba(245, 158, 11, 0.16);
+
+  /* 首页设计变量（浅色） */
+  --ox-bg: #ffffff;
+  --ox-bg-soft: #f7f8fa;
+  --ox-card: #ffffff;
+  --ox-border: #e6e8eb;
+  --ox-text: #0f172a;
+  --ox-text-2: #52606d;
+  --ox-brand: #f59e0b;
+  --ox-brand-deep: #d97706;
+  --ox-navy: #0c1424;
+  --ox-navy-2: #16213a;
+  --ox-glow: rgba(245, 158, 11, 0.12);
+}
+
+.dark {
+  --vp-c-brand-1: #fbbf24;
+  --vp-c-brand-2: #f59e0b;
+  --vp-c-brand-3: #d97706;
+  --vp-c-brand-soft: rgba(245, 158, 11, 0.16);
+
+  /* 首页设计变量（深色） */
+  --ox-bg: #0b1220;
+  --ox-bg-soft: #0e1626;
+  --ox-card: #111c33;
+  --ox-border: #1f2c47;
+  --ox-text: #e5e7eb;
+  --ox-text-2: #94a3b8;
+  --ox-brand: #fbbf24;
+  --ox-brand-deep: #f59e0b;
+  --ox-navy: #070d1a;
+  --ox-navy-2: #0c1424;
+  --ox-glow: rgba(245, 158, 11, 0.08);
+}
+
+/* 字体栈：系统原生，中英文兼顾（Dify 式干净排版） */
+:root {
+  --vp-font-family-base:
+    'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --vp-font-family-mono:
+    'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* ============ 自定义首页：整页全宽，去掉 doc 容器约束 ============ */
+.oryx-home .VPDoc {
+  padding: 0 !important;
+}
+.oryx-home .VPDoc > .container {
+  max-width: none !important;
+  padding: 0 !important;
+}
+.oryx-home .VPDoc > .container > .content {
+  max-width: none !important;
+  padding: 0 !important;
+}
+.oryx-home .VPDoc .content-container {
+  max-width: none !important;
+}
+.oryx-home .vp-doc {
+  padding: 0 !important;
+}
+/* 首页用自己的页脚 */
+.oryx-home .VPFooter {
+  display: none;
+}
