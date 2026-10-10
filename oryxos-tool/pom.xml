@@ -14,6 +14,11 @@
     <description>能力四（Tool 工具体系，三合一）：内置 Tool（File/Shell/Http/Notify）、McpClientService、McpToolAdapter、ToolRegistry、Sandbox 接口 + WhitelistSandbox</description>
 
     <dependencies>
+        <!-- 契约倒置：内置 Tool 实现 core 的 OryxTool 接口（core 不反向依赖 tool） -->
+        <dependency>
+            <groupId>io.oryxlabs</groupId>
+            <artifactId>oryxos-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>

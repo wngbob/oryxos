@@ -14,6 +14,11 @@
     <description>能力三（Memory 记忆）：MemoryService 三层门面、LongTermMemory（MEMORY.md）、MemoryTools（save_memory / recall_memory）</description>
 
     <dependencies>
+        <!-- 契约倒置：MemoryTools（save_memory / recall_memory）实现 core 的 OryxTool 接口 -->
+        <dependency>
+            <groupId>io.oryxlabs</groupId>
+            <artifactId>oryxos-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
