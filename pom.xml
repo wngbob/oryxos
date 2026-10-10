@@ -132,6 +132,12 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>3.5.1</version>
                 </plugin>
+                <!-- oryxos-cli 打成可执行 fat JAR（内嵌 picocli），使 java -jar 可直接运行 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.6.0</version>
+                </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
