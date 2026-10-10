@@ -235,7 +235,7 @@ US-1 实施完成后不立刻有 demo，因为它没有用户可见的入口，�
 
 **涉及的 Maven 模块**：
 - `oryxos-core`（`ReActLoop`、`PromptBuilder`、`ToolExecutor`、`ContextLoader`）
-- `oryxos-tool`（一个 HTTP Tool + `SandboxChecker` 简化版，Demo 一需要）
+- `oryxos-tool`（一个 HTTP Tool + `WhitelistSandbox` 简化版，Demo 一需要）
 - `oryxos-channel-cli`（CLI Channel，Demo 一需要）
 - `oryxos-cli`（`oryxos init` + `oryxos chat` 命令）
 
@@ -247,7 +247,7 @@ US-1 实施完成后不立刻有 demo，因为它没有用户可见的入口，�
 |----------|---------|
 | ReAct 循环类 | `ReActLoop` 主循环、`PromptBuilder`、`ToolExecutor`、`MAX_ITERATIONS` 控制 |
 | CLI Channel 类 | `CliChannel`、`oryxos chat` 命令、`oryxos init` 工作区初始化 |
-| 基础 Tool 类 | HTTP Tool、`SandboxChecker` 简化版（只校验 URL 白名单） |
+| 基础 Tool 类 | HTTP Tool、`WhitelistSandbox` 简化版（只校验 URL 白名单） |
 | Profile YAML 解析类 | SnakeYAML、Profile 校验 |
 | Session 类 | `Session` 数据结构、`SessionManager` 内存版（持久化放 US-5） |
 
@@ -300,14 +300,14 @@ US-3 实施完成后跑 `/speckit.analyze`。
 核心阶段做完三档基础设施 + 内置 Tool 补齐。
 
 **涉及的 Maven 模块**：
-- `oryxos-tool`（补齐文件 Tool + Shell Tool、MCP Client、`SandboxChecker` 完整版、`ToolRegistry`，三合一模块）
+- `oryxos-tool`（补齐文件 Tool + Shell Tool、MCP Client、`WhitelistSandbox` 完整版、`ToolRegistry`，三合一模块）
 - `oryxos-core`（SKILL.md 的加载归 `ContextLoader`，不在 tool 模块）
 
 **Spec-Kit 任务拆分思路**：US-4 跟 US-3 可以并行（都依赖 US-2 但互不依赖）。预期产出的 task 大类：
 
 | Task 类别 | 主要内容 |
 |----------|---------|
-| 内置 Tool 补齐类 | `read_file`、`write_file`、`list_dir`，Shell Tool 带白名单，`SandboxChecker` 完整实现 |
+| 内置 Tool 补齐类 | `read_file`、`write_file`、`list_dir`，Shell Tool 带白名单，`WhitelistSandbox` 完整实现 |
 | MCP Client 类 | `mcp_servers.yaml` 解析、`McpClientService` 启动时连接、`tools/list` 拉工具、`McpToolAdapter` 包装成 `OryxTool` |
 | `AGENT.md` 类 | `ContextLoader` 加载 `.oryxos/agents/` 下每个 Agent 的 `AGENT.md` 正文拼接到 system prompt，这部分归 core 不归 tool |
 | Agent 定义类 | `AgentLoader.deriveProfile` 从 `AGENT.md` frontmatter 派生 `Profile`（含 `tools` / `mcp_servers` 等字段） |
@@ -317,7 +317,7 @@ US-3 实施完成后跑 `/speckit.analyze`。
 - **MCP Client 集成**（MCP 协议是 JSON-RPC over stdio 或 SSE，Java 生态成熟度不如 Python）：
   - 建议先实现 stdio transport（最常用），SSE 放扩展
   - stdio MCP Client 建议拆几个子 task：连接管理、`tools/list`、`tool/call`、错误恢复
-- **`SandboxChecker` 完整版**（从 US-2 的简化版扩展到完整版：文件路径白名单 + Shell 命令白名单 + HTTP 域名白名单，建议拆 3 个子 task）
+- **`WhitelistSandbox` 完整版**（从 US-2 的简化版扩展到完整版：文件路径白名单 + Shell 命令白名单 + HTTP 域名白名单，建议拆 3 个子 task）
 
 US-4 实施完成后跑 `/speckit.analyze`。
 

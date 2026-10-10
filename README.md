@@ -85,6 +85,24 @@ OryxOS 是企业私有部署的 **Agent 操作系统**：装在企业自己的 K
 - **存储下沉**：Session、审计、调度状态落 SQLite；Agent 目录、Bootstrap、`MEMORY.md` 落文件系统——可直接编辑、git 可跟踪
 - **外部依赖全部在边界之外**：LLM API、外部 MCP server、企业 IM webhook，OryxOS 不绑定任何一家
 
+## 模块结构
+
+核心阶段为 9 个 Maven 模块，模块间通过接口解耦，`oryxos-boot` 负责聚合：
+
+| 模块 | 职责 |
+|------|------|
+| `oryxos-core` | 核心抽象与引擎：`OryxTool`、`Session`、`Profile`、`AgentLoader`、`ContextLoader`、`ReActLoop`、`PromptBuilder`、`ToolExecutor`、`AgentService`、`AgentScheduler` |
+| `oryxos-provider` | 能力一「对接 LLM」：`ProviderService`、Function Calling 适配、provider name 显式映射 |
+| `oryxos-memory` | 能力三「Memory」：`MemoryService` 三层门面、`LongTermMemory`、`MemoryTools` |
+| `oryxos-tool` | 能力四「Tool」：内置 Tool（File / Shell / Http / Notify）、`McpClientService`、`ToolRegistry`、`Sandbox` 接口 + `WhitelistSandbox` |
+| `oryxos-channel-cli` | CLI Channel：`CliChannel`、`oryxos chat` |
+| `oryxos-web` | 能力五「Web Service」：`WebServer`、6 个 `ApiController`、OpenAPI |
+| `oryxos-storage` | SQLite 持久化：Session 与审计表 Repository |
+| `oryxos-cli` | Picocli 主入口、12 个子命令、`ConfigLoader` |
+| `oryxos-boot` | Spring Boot 启动模块、自动配置、依赖聚合（`java -jar` 入口） |
+
+全量 14 个模块（另含 `oryxos-persona` / `oryxos-knowledge` / `oryxos-channel-feishu|wecom|dingtalk`）属扩展演进，核心阶段不建。
+
 ## 设计原则
 
 - **底座优先于 Agent**：最重要的交付不是某个强大的 Agent，而是让任意 Agent 都能可靠运行的环境
