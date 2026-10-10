@@ -28,9 +28,10 @@
 
 ## 当前状态
 
-- **阶段**：greenfield，设计文档已定稿，Maven 骨架已初始化（业务代码未开始）
-- **已有**：`.specify/`（Spec-Kit v1.0.10 脚手架）、`.claude/skills/`（10 个 speckit-* skills，dash 风格命名）、docs/、Maven 9 模块骨架（各模块暂为占位类，两个可运行入口：**`oryxos-boot` 的 `OryxosApplication` 是 fat JAR 主类**，`java -jar oryxos-boot/target/oryxos.jar` 启动 Spring Boot + Web 容器；**`oryxos-cli` 的 `OryxOsCli` 是 Picocli 主入口**，独立运行打印版本信息，`--version` / `--help` 可用）
-- **官网**：`website/`（VitePress 1.6，中英文双语 root=zh / en，自定义主题首页非默认模板；`base: '/oryxos/'` 对应 GitHub Pages 项目页 wngbob.github.io/oryxos；`.github/workflows/deploy.yml` 在 `website/**` 变更推送 main 时自动构建部署。若绑定独立域名 oryxos.wngbob.com：base 改为 `'/'` 并在 `website/public/` 放 CNAME 文件）
+- **阶段**：greenfield，设计文档已定稿，Maven 骨架已初始化；业务代码未开始，但已落第一层「契约接口 + 审计地基」（见本节「契约与审计地基」条目）
+- **已有**：`.specify/`（Spec-Kit v1.0.10 脚手架）、`.claude/skills/`（10 个 speckit-* skills，dash 风格命名）、docs/、`LICENSE`（Apache 2.0）、Maven 9 模块骨架（各模块暂为占位类，两个可运行入口：**`oryxos-boot` 的 `OryxosApplication` 是 fat JAR 主类**，`java -jar oryxos-boot/target/oryxos.jar` 启动 Spring Boot + Web 容器；**`oryxos-cli` 的 `OryxOsCli` 是 Picocli 主入口**，已由 maven-shade-plugin 打成可执行 fat JAR（内嵌 picocli），`java -jar oryxos-cli/target/oryxos-cli-0.1.0-SNAPSHOT.jar --version` 可直接运行）
+- **官网**：`website/`（VitePress 1.6，中英文双语 root=zh / en，自定义主题首页非默认模板；`base: '/oryxos/'` 对应 GitHub Pages 项目页 wngbob.github.io/oryxos；`.github/workflows/deploy-pages.yml` 在 `website/**` 变更推送 main 时自动构建部署（Pages Source 须设为 GitHub Actions）。若绑定独立域名 oryxos.wngbob.com：base 改为 `'/'` 并在 `website/public/` 放 CNAME 文件）
+- **契约与审计地基**（骨架期已落，均为接口/表结构，不含业务实现）：契约按「实现依赖契约、core 不反向依赖」放置——`oryxos-core` 定义 `OryxTool` / `ToolResult`；`oryxos-tool` 定义 `Sandbox` / `SandboxAction` / `ActionType` / `SandboxViolationException` / `NotifyChannelAdapter` / `NotifyTarget`；`oryxos-memory` 定义 `LongTermMemoryStore` / `MemoryScope` / `MemoryCapability`。审计表 `tool_invocations` / `llm_calls` 的实体 + Repository 在 `oryxos-storage`，建表脚本 `oryxos-storage/src/main/resources/db/schema.sql`（手工执行，`ddl-auto=none`，不走 Spring Boot 的 classpath `schema.sql` 自动执行）；`oryxos-boot` 因实体在兄弟包，必须显式 `@EntityScan` + `@EnableJpaRepositories`
 - **打包脚本**：`scripts/package.sh`（编译 → 打包 `dist/` → scp 上传远程；源码包排除所有 `target/`、`node_modules` 等本地产物，唯一上传的构建产物是脱离 target/ 的 `dist/oryxos.jar`；远程目标用 `REMOTE_HOST` / `REMOTE_DIR` 环境变量配置，未设置则跳过上传）
 - **待办**：constitution 重写为 v2.0.0（当前是脚手架默认版，OryxOS 原则未写入）→ `/speckit-specify` → `/speckit-plan` → 按 user story 实施
 - **环境**：JDK 21 + Maven 3.9.16 便携版在 `D:\data\work\tools\`（未入系统 PATH；构建前 `export JAVA_HOME=/d/data/work/tools/jdk-21.0.12.1+1`，仓库自带 `./mvnw`；国内构建用 `-s D:\data\work\tools\maven-settings-aliyun.xml` 走阿里云镜像）；已是 git 仓库（main 分支），remote `origin` = https://github.com/wngbob/oryxos（Public）；repo-local 配置：`http.proxy=http://127.0.0.1:7890`（本机直连 github.com 不通，走 Clash 代理）、`credential.helper=store`（本机 GCM 异常已旁路，PAT 明文存于 `~/.git-credentials`）；用 commit 标记每个 user story 完成
@@ -192,6 +193,8 @@ settings:
 | `oryxos-boot` | Spring Boot 启动模块、自动配置、依赖聚合 |
 
 全量 14 个模块（+ `oryxos-persona` / `oryxos-knowledge` / `oryxos-channel-feishu|wecom|dingtalk`）见技术方案 ch10，属扩展演进，核心阶段不建。
+
+**依赖方向（依赖倒置）**：`oryxos-boot` 聚合其余 8 个；`oryxos-cli` 依赖各能力模块；`oryxos-tool` / `oryxos-memory` 依赖 `oryxos-core`（实现 core 的 `OryxTool` 契约）；**`oryxos-core` 不反向依赖任何能力模块**——契约在 core、实现在各模块。例外是 `Sandbox` / `NotifyChannelAdapter`，契约放 `oryxos-tool`：内置 Tool 在自己的 `execute` 开头调 `sandbox.enforce(...)`，core 全程不引用 Sandbox，故不成环。
 
 ## 实施路线（Spec-Kit + user story）
 
